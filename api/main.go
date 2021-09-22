@@ -28,6 +28,7 @@ func main() {
 	r := mux.NewRouter()
 
 	userService := UserService{
+        notifier: make(chan []byte, 10),
 		repository: NewInMemoryUserStorage(),
 	}
 
@@ -35,6 +36,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+    go runPublisher(userService.notifier)
 
 	r.HandleFunc(
 		"/user/me",

@@ -162,7 +162,7 @@ func TestUsers_JWT(t *testing.T) {
 
 	t.Run("user does not exist", func(t *testing.T) {
 		u := newTestUserService()
-		j, err := NewJWTService("pubkey.rsa", "privkey.rsa")
+		j, err := NewMyJWTService()
 		if err != nil {
 			t.FailNow()
 		}
@@ -182,7 +182,7 @@ func TestUsers_JWT(t *testing.T) {
 
 	t.Run("wrong password", func(t *testing.T) {
 		u := newTestUserService()
-		j, err := NewJWTService("pubkey.rsa", "privkey.rsa")
+		j, err := NewMyJWTService()
 		if err != nil {
 			t.FailNow()
 		}
@@ -211,7 +211,7 @@ func TestUsers_JWT(t *testing.T) {
 
 	t.Run("unauthorized cake", func(t *testing.T) {
 		u := newTestUserService()
-		j, err := NewJWTService("pubkey.rsa", "privkey.rsa")
+		j, err := NewMyJWTService()
 		if err != nil {
 			t.FailNow()
 		}
@@ -226,7 +226,7 @@ func TestUsers_JWT(t *testing.T) {
 
 	t.Run("wrong credentials", func(t *testing.T) {
 		u := newTestUserService()
-		j, err := NewJWTService("pubkey.rsa", "privkey.rsa")
+		j, err := NewMyJWTService()
 		if err != nil {
 			t.FailNow()
 		}
@@ -243,7 +243,7 @@ func TestUsers_JWT(t *testing.T) {
 
 	t.Run("authorived cake", func(t *testing.T) {
 		u := newTestUserService()
-		j, err := NewJWTService("pubkey.rsa", "privkey.rsa")
+		j, err := NewMyJWTService()
 		if err != nil {
 			t.FailNow()
 		}
@@ -282,7 +282,7 @@ func TestUsers_Update(t *testing.T) {
 
 	t.Run("favorite cake updating", func(t *testing.T) {
 		us := newTestUserService()
-		js, err := NewJWTService("pubkey.rsa", "privkey.rsa")
+		js, err := NewMyJWTService()
 		if err != nil {
 			t.FailNow()
 		}
@@ -335,7 +335,7 @@ func TestUsers_Update(t *testing.T) {
 
 	t.Run("password updating", func(t *testing.T) {
 		us := newTestUserService()
-		js, err := NewJWTService("pubkey.rsa", "privkey.rsa")
+		js, err := NewMyJWTService()
 		if err != nil {
 			t.FailNow()
 		}
@@ -389,7 +389,7 @@ func TestUsers_Update(t *testing.T) {
 
 	t.Run("email updating", func(t *testing.T) {
 		us := newTestUserService()
-		js, err := NewJWTService("pubkey.rsa", "privkey.rsa")
+		js, err := NewMyJWTService()
 		if err != nil {
 			t.FailNow()
 		}
@@ -449,7 +449,7 @@ func TestUsers_Admin(t *testing.T) {
 
 	t.Run("banning user", func(t *testing.T) {
 		us := newTestUserService()
-		js, err := NewJWTService("pubkey.rsa", "privkey.rsa")
+		js, err := NewMyJWTService()
 		if err != nil {
 			t.FailNow()
 		}
@@ -515,7 +515,7 @@ func TestUsers_Admin(t *testing.T) {
 
 	t.Run("unbanning user", func(t *testing.T) {
 		us := newTestUserService()
-		js, err := NewJWTService("pubkey.rsa", "privkey.rsa")
+		js, err := NewMyJWTService()
 		if err != nil {
 			t.FailNow()
 		}

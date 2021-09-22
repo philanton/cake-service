@@ -41,6 +41,7 @@ func (us *UserService) BanUser(w http.ResponseWriter, r *http.Request, u User) {
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("user \"" + params.Email + "\" is banned with reason\"" + params.Reason + "\" by \"" + u.Email + "\""))
+    us.notifier <- []byte("banned: " + params.Email)
 }
 
 func (us *UserService) UnbanUser(w http.ResponseWriter, r *http.Request, u User) {
@@ -69,6 +70,7 @@ func (us *UserService) UnbanUser(w http.ResponseWriter, r *http.Request, u User)
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("user \"" + params.Email + "\" is unbanned by \"" + u.Email + "\""))
+    us.notifier <- []byte("unbanned: " + params.Email)
 }
 
 func (us *UserService) History(w http.ResponseWriter, r *http.Request, u User) {

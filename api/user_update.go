@@ -40,6 +40,7 @@ func (us *UserService) OverwriteCake(w http.ResponseWriter, r *http.Request, u U
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("favorite cake changed"))
+    us.notifier <- []byte("updated cake: " + u.Email)
 }
 
 func (us *UserService) OverwritePassword(w http.ResponseWriter, r *http.Request, u User) {
@@ -68,7 +69,7 @@ func (us *UserService) OverwritePassword(w http.ResponseWriter, r *http.Request,
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("password changed"))
-
+    us.notifier <- []byte("updated password: " + u.Email)
 }
 
 func (us *UserService) OverwriteEmail(w http.ResponseWriter, r *http.Request, u User) {
@@ -96,5 +97,5 @@ func (us *UserService) OverwriteEmail(w http.ResponseWriter, r *http.Request, u 
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("email changed"))
-
+    us.notifier <- []byte("updated email: " + u.Email + " -> " + params.Email)
 }

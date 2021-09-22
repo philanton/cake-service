@@ -32,6 +32,7 @@ type UserRepository interface {
 
 type UserService struct {
 	repository UserRepository
+    notifier chan []byte
 }
 
 type UserRegisterParams struct {
@@ -110,6 +111,7 @@ func (u *UserService) Register(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte("registered"))
+    u.notifier <- []byte("registered: " + params.Email)
 }
 
 func handleError(err error, w http.ResponseWriter) {
