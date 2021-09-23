@@ -11,8 +11,9 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func getCakeHandler(w http.ResponseWriter, r *http.Request, u User) {
+func (us *UserService) getCakeHandler(w http.ResponseWriter, r *http.Request, u User) {
 	w.Write([]byte(u.FavoriteCake))
+	cakesGiven.Inc()
 }
 
 func wrapJWT(
@@ -28,7 +29,7 @@ func main() {
 	r := mux.NewRouter()
 
 	userService := UserService{
-        notifier: make(chan []byte, 10),
+		notifier:   make(chan []byte, 10),
 		repository: NewInMemoryUserStorage(),
 	}
 
@@ -37,11 +38,12 @@ func main() {
 		panic(err)
 	}
 
-    go runPublisher(userService.notifier)
+	go runPublisher(userService.notifier)
+	go startProm()
 
 	r.HandleFunc(
 		"/user/me",
-		logRequest(myJWTService.jwtAuth(userService.repository, getCakeHandler)),
+		logRequest(myJWTService.jwtAuth(userService.repository, userService.getCakeHandler)),
 	).Methods(http.MethodGet)
 	r.HandleFunc("/user/register", logRequest(userService.Register)).Methods(http.MethodPost)
 	r.HandleFunc(

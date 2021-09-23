@@ -4,18 +4,18 @@ import (
 	"net/http"
 	"strings"
 
-    "github.com/philanton/cake-service/pkg/jwt"
+	"github.com/philanton/cake-service/pkg/jwt"
 )
 
 type ProtectedHandler func(rw http.ResponseWriter, r *http.Request, u User)
 
 type MyJWTService struct {
-    *jwt.JWTService
+	*jwt.JWTService
 }
 
 func NewMyJWTService() (*MyJWTService, error) {
-    jwtService, err := jwt.NewJWTService()
-    return &MyJWTService{ jwtService }, err
+	jwtService, err := jwt.NewJWTService()
+	return &MyJWTService{jwtService}, err
 }
 
 func (j *MyJWTService) jwtAuth(ur UserRepository, h ProtectedHandler) http.HandlerFunc {

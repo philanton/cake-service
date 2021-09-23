@@ -49,6 +49,9 @@ func prepareParams(t *testing.T, params map[string]interface{}) io.Reader {
 func newTestUserService() *UserService {
 	return &UserService{
 		repository: NewInMemoryUserStorage(),
+		notifier:   make(chan []byte, 10),
+		reg:        make(chan bool, 5),
+		cake:       make(chan bool, 5),
 	}
 }
 
@@ -216,7 +219,7 @@ func TestUsers_JWT(t *testing.T) {
 			t.FailNow()
 		}
 
-		ts := httptest.NewServer(http.HandlerFunc(j.jwtAuth(u.repository, getCakeHandler)))
+		ts := httptest.NewServer(http.HandlerFunc(j.jwtAuth(u.repository, u.getCakeHandler)))
 		defer ts.Close()
 
 		resp := doRequest(http.NewRequest(http.MethodGet, ts.URL, nil))
@@ -231,7 +234,7 @@ func TestUsers_JWT(t *testing.T) {
 			t.FailNow()
 		}
 
-		ts := httptest.NewServer(http.HandlerFunc(j.jwtAuth(u.repository, getCakeHandler)))
+		ts := httptest.NewServer(http.HandlerFunc(j.jwtAuth(u.repository, u.getCakeHandler)))
 		defer ts.Close()
 
 		req, err := http.NewRequest(http.MethodGet, ts.URL, nil)
@@ -267,7 +270,7 @@ func TestUsers_JWT(t *testing.T) {
 		resp = doRequest(http.NewRequest(http.MethodPost, ts.URL, prepareParams(t, params)))
 		ts.Close()
 
-		ts = httptest.NewServer(http.HandlerFunc(j.jwtAuth(u.repository, getCakeHandler)))
+		ts = httptest.NewServer(http.HandlerFunc(j.jwtAuth(u.repository, u.getCakeHandler)))
 		req, err := http.NewRequest(http.MethodGet, ts.URL, nil)
 		req.Header.Set("Authorization", "Bearer "+string(resp.body))
 		resp = doRequest(req, err)

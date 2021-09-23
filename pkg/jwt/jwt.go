@@ -5,8 +5,8 @@ import (
 )
 
 const (
-    privKeyPath = "../privkey.rsa"
-    pubKeyPath = "../pubkey.rsa"
+	privKeyPath = "../privkey.rsa"
+	pubKeyPath  = "../pubkey.rsa"
 )
 
 type JWTService struct {
