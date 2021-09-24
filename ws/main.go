@@ -4,6 +4,7 @@ import (
     "flag"
     "log"
     "net/http"
+    "strings"
     "time"
 
     "github.com/philanton/cake-service/pkg/jwt"
@@ -26,20 +27,24 @@ func main() {
     go hub.run()
     go timeGen(hub)
 
-    jwtService := jwt.NewJWTService()
+    jwtService, err := jwt.NewJWTService()
+    if err != nil {
+        panic(err)
+    }
 
     http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
         authHeader := r.Header.Get("Authorization")
         token := strings.TrimPrefix(authHeader, "Bearer ")
         if _, err := jwtService.ParseJWT(token); err != nil {
             w.WriteHeader(401)
-            w.Write("unauthorized")
+            w.Write([]byte("unauthorized"))
             return
         }
 
         serveWS(hub, w, r)
     })
-    err := http.ListenAndServe(*addr, nil)
+
+    err = http.ListenAndServe(*addr, nil)
     if err != nil {
         log.Fatal("ListenAndServe: ", err)
     }
