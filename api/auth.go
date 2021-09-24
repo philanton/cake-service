@@ -3,11 +3,22 @@ package main
 import (
 	"net/http"
 	"strings"
+
+    "github.com/philanton/cake-service/pkg/jwt"
 )
 
 type ProtectedHandler func(rw http.ResponseWriter, r *http.Request, u User)
 
-func (j *JWTService) jwtAuth(ur UserRepository, h ProtectedHandler) http.HandlerFunc {
+type MyJWTService struct {
+    *jwt.JWTService
+}
+
+func NewMyJWTService() (*MyJWTService, error) {
+    jwtService, err := jwt.NewJWTService()
+    return &MyJWTService{ jwtService }, err
+}
+
+func (j *MyJWTService) jwtAuth(ur UserRepository, h ProtectedHandler) http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
 		token := strings.TrimPrefix(authHeader, "Bearer ")

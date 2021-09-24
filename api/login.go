@@ -12,7 +12,7 @@ type JWTParams struct {
 	Password string `json:"password"`
 }
 
-func (u *UserService) JWT(w http.ResponseWriter, r *http.Request, jwtService *JWTService) {
+func (u *UserService) JWT(w http.ResponseWriter, r *http.Request, jwtService *MyJWTService) {
 	params := &JWTParams{}
 	err := json.NewDecoder(r.Body).Decode(params)
 	if err != nil {
@@ -32,7 +32,7 @@ func (u *UserService) JWT(w http.ResponseWriter, r *http.Request, jwtService *JW
 		return
 	}
 
-	token, err := jwtService.GenerateJWT(user)
+	token, err := jwtService.GenerateJWT(user.Email)
 	if err != nil {
 		handleError(errors.New("invalid login params"), w)
 		return

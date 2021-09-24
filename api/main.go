@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-    "github.com/philanton/cake-service/pkg/jwt"
 )
 
 func getCakeHandler(w http.ResponseWriter, r *http.Request, u User) {
@@ -17,8 +16,8 @@ func getCakeHandler(w http.ResponseWriter, r *http.Request, u User) {
 }
 
 func wrapJWT(
-	jwtService *jwt.JWTService,
-	f func(http.ResponseWriter, *http.Request, *jwt.JWTService),
+	jwtService *MyJWTService,
+	f func(http.ResponseWriter, *http.Request, *MyJWTService),
 ) http.HandlerFunc {
 	return func(rw http.ResponseWriter, r *http.Request) {
 		f(rw, r, jwtService)
@@ -32,43 +31,43 @@ func main() {
 		repository: NewInMemoryUserStorage(),
 	}
 
-	jwtService, err := jwt.NewJWTService()
+	myJWTService, err := NewMyJWTService()
 	if err != nil {
 		panic(err)
 	}
 
 	r.HandleFunc(
 		"/user/me",
-		logRequest(jwtService.jwtAuth(userService.repository, getCakeHandler)),
+		logRequest(myJWTService.jwtAuth(userService.repository, getCakeHandler)),
 	).Methods(http.MethodGet)
 	r.HandleFunc("/user/register", logRequest(userService.Register)).Methods(http.MethodPost)
 	r.HandleFunc(
 		"/user/jwt",
-		logRequest(wrapJWT(jwtService, userService.JWT)),
+		logRequest(wrapJWT(myJWTService, userService.JWT)),
 	).Methods(http.MethodPost)
 	r.HandleFunc(
 		"/user/favorite_cake",
-		logRequest(jwtService.jwtAuth(userService.repository, userService.OverwriteCake)),
+		logRequest(myJWTService.jwtAuth(userService.repository, userService.OverwriteCake)),
 	).Methods(http.MethodPut)
 	r.HandleFunc(
 		"/user/password",
-		logRequest(jwtService.jwtAuth(userService.repository, userService.OverwritePassword)),
+		logRequest(myJWTService.jwtAuth(userService.repository, userService.OverwritePassword)),
 	).Methods(http.MethodPut)
 	r.HandleFunc(
 		"/user/email",
-		logRequest(jwtService.jwtAuth(userService.repository, userService.OverwriteEmail)),
+		logRequest(myJWTService.jwtAuth(userService.repository, userService.OverwriteEmail)),
 	).Methods(http.MethodPut)
 	r.HandleFunc(
 		"/admin/ban",
-		logRequest(jwtService.jwtAuth(userService.repository, userService.BanUser)),
+		logRequest(myJWTService.jwtAuth(userService.repository, userService.BanUser)),
 	).Methods(http.MethodPost)
 	r.HandleFunc(
 		"/admin/unban",
-		logRequest(jwtService.jwtAuth(userService.repository, userService.UnbanUser)),
+		logRequest(myJWTService.jwtAuth(userService.repository, userService.UnbanUser)),
 	).Methods(http.MethodPost)
 	r.HandleFunc(
 		"/admin/inspect",
-		logRequest(jwtService.jwtAuth(userService.repository, userService.History)),
+		logRequest(myJWTService.jwtAuth(userService.repository, userService.History)),
 	).Methods(http.MethodGet)
 
 	srv := http.Server{
