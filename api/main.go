@@ -75,8 +75,9 @@ func main() {
 		logRequest(myJWTService.jwtAuth(userService.repository, userService.History)),
 	).Methods(http.MethodGet)
 
+    apiPort := os.Getenv("API_PORT")
 	srv := http.Server{
-		Addr:    ":8080",
+		Addr:    ":"+apiPort,
 		Handler: r,
 	}
 

@@ -2,15 +2,13 @@ package main
 
 import (
 	"log"
+    "os"
 
 	"github.com/streadway/amqp"
 )
 
-const (
-	amqpPath = "amqp://guest:guest@localhost:5672"
-)
-
 func (hub *Hub) receive() {
+    amqpPath := os.Getenv("RABBITMQ_CONN_PATH")
 	conn, err := amqp.Dial(amqpPath)
 	if err != nil {
 		log.Fatalf("Failed to connect to RabbitMQ: %s", err)

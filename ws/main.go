@@ -4,12 +4,14 @@ import (
 	"flag"
 	"log"
 	"net/http"
+    "os"
 	"strings"
 
 	"github.com/philanton/cake-service/pkg/jwt"
 )
 
-var addr = flag.String("addr", ":8081", "http service address")
+var wsPort = os.Getenv("WEBSOCKET_PORT")
+var addr = flag.String("addr", ":"+wsPort, "http service address")
 
 func main() {
 	flag.Parse()
